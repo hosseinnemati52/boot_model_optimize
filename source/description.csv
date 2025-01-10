@@ -1,0 +1,9 @@
+This version works with a payoff matrix whose entries are linearly dependent on 
+the fitnesses of the players, i.e., F1 and F2. For example, if two WT play, the 1st gets
+a + b (F2-F1), and the 2nd gets a + b (F1-F2). 
+Also, the entries of the payoff matrix have noise terms.
+d Phi / d t = F(t);
+There are thresholds for F for : cycling -> G1-arrest -> G0 -> differentiation -> apoptosis.
+Also it saves the data less frequantly, and more wisely.
+
+This is old

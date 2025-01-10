@@ -1,0 +1,73 @@
+############### GENERAL ##############
+N_UpperLim = 6000
+NTypes = 2
+typeR0   = [0.5, 0.5]
+typeR2PI = [0.705, 0.705]
+typeTypeEpsilon = [[0.00, 0.00];[0.00, 0.00]]
+############### GENERAL ##############
+
+############### FORCE AND FRICTION ##############
+typeGamma = [5.0, 5.0]
+typeTypeGammaCC = [[0.01, 0.01];[0.01, 0.01]]
+typeTypeF_rep_max = [[800., 800.];[800., 800.]]
+typeTypeF_abs_max = [[20.0, 10.0];[10.0, 20.0]]
+R_eq_coef = 1.0
+R_cut_coef_force = 1.5
+############### FORCE AND FRICTION ##############
+
+############### SELF-PROPULSION ##############
+typeFm = [0.000, 0.000]
+typeDr = [1.0, 1.0]
+############### SELF-PROPULSION ##############
+
+############### G1 phase border / (2*PI) ##############
+G1Border = 0.40
+############### G1 phase border / (2*PI) ##############
+
+############### POTENTIAL LANDSCAPE ##############
+typeOmega = [0.54, 0.36]
+typeBarrierW = [0.05, 0.05]
+typeSigmaPhi = [0.05, 0.05]
+typeSigmaFit = [0.02, 0.02]
+barrierPeakCoef = 0.00023
+
+typeFit0 = [0.38, 0.41]
+Fit_Th_Wall = 0.295
+Fit_Th_G0 = 0.267
+Fit_Th_Diff = 0.2
+Fit_Th_Apop = 0.0
+############### POTENTIAL LANDSCAPE ##############
+
+############### TIMING & SAMPLING ##############
+maxTime = 100.1
+dt = 0.001
+dt_sample = 0.05
+samplesPerWrite = 1000
+writePerZip = 10
+printingTimeInterval = 1.0
+############### TIMING & SAMPLING ##############
+
+############### GAME ##############
+R_cut_coef_game = 1.1
+tau = 999999
+typeTypePayOff_mat_real_C = [[0.000, -0.0225];[0.0225, 0.00]]
+typeTypePayOff_mat_real_F1 = [[-0.00, 0];[0, -0.00]]
+typeTypePayOff_mat_real_F2 = [[0.00, 0];[0, 0.00]]
+typeTypePayOff_mat_imag_C = [[0.000, 0.0];[0.0, 0.00]]
+typeTypePayOff_mat_imag_F1 = [[0.000, 0.0];[0.0, 0.00]]
+typeTypePayOff_mat_imag_F2 = [[0.000, 0.0];[0.0, 0.00]]
+############### GAME ##############
+
+############### NEWBORN FITNESS ##############
+newBornFitKey = ec
+############### NEWBORN FITNESS ##############
+
+############### INITIALIZAION ##############
+initConfig = read
+############### INITIALIZAION ##############
+
+
+
+##********  put ONE (and just ONE) space at each side of each "=" ********
+##********  initConfig: read (reads), gen (generates) ********
+##********  newBornFitKey: ec (economic), FI (full inheritence), r (resets to inherent value)********
