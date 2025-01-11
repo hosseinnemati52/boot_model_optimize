@@ -22,7 +22,7 @@ for i in $(seq $N0 $N); do
 done
 
 # Run the Python initialization script
-python3 init_cell_number_maker.py
+python3 init_cell_number_maker_v2.py
 
 # Run the initialization executable in each directory
 #for i in $(seq $N0 $N); do

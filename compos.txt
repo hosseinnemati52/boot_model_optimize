@@ -1,4 +1,4 @@
-WT
+mix
 
 #mixed   : mix
 #pure WT : WT
