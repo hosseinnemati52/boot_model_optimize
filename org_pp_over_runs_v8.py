@@ -1046,9 +1046,12 @@ for runC in range(N_runs):
     
     
     ## distributions ##
-    for time_Win_C in range(N_time_windows):
-        WT_enter_fit_all_runs[time_Win_C][runC,:] = (np.loadtxt(folderName+"/pp_data/enter_fit_hist_plot_"+str(time_Win_C)+".txt", delimiter=',')).copy()
-        WT_exit_fit_all_runs[time_Win_C][runC,:] = (np.loadtxt(folderName+"/pp_data/exit_fit_hist_plot_"+str(time_Win_C)+".txt", delimiter=',')).copy()
+    try:
+        for time_Win_C in range(N_time_windows):
+            WT_enter_fit_all_runs[time_Win_C][runC,:] = (np.loadtxt(folderName+"/pp_data/enter_fit_hist_plot_"+str(time_Win_C)+".txt", delimiter=',')).copy()
+            WT_exit_fit_all_runs[time_Win_C][runC,:] = (np.loadtxt(folderName+"/pp_data/exit_fit_hist_plot_"+str(time_Win_C)+".txt", delimiter=',')).copy()
+    except:
+        pass
     ## distributions ##
     
     ## heatmap dists ##

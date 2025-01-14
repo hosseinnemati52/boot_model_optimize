@@ -1,9 +1,9 @@
 ############### Frames plot ##############
-frame_plot_switch = 1
+frame_plot_switch = 0
 ############### Frames plot ##############
 
 ############### ent, ext dist plot ##############
-ent_ext_switch = 1
+ent_ext_switch = 0
 ############### ent, ext dist plot ##############
 
 ##********  put ONE (and just ONE) space at each side of each "=" ********
