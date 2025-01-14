@@ -428,7 +428,7 @@ def overal_plotter(exp_data_load_switch, save_switch):
         
         x = time * tau_avg
         y = np.mean(data,axis=0)
-        y_err = np.std(data,axis=0)
+        y_err = np.std(data,axis=0)/np.sqrt(N_runs-1)
         plt.plot(x, y, label=data_label, color=color)
         plt.fill_between(x, y - y_err, y + y_err, alpha=0.3, color=color)
         
@@ -883,6 +883,21 @@ def mean_cycle_time_func_overal():
     hist_CA, bins_CA, _ = plt.hist(CA, bins=15, color='green', alpha=0.5, label='CA', edgecolor='black', density=True)
     hist_WT, bins_WT, _ = plt.hist(WT, bins=15, color='purple', alpha=0.7, label='WT', edgecolor='black', density=True)
     
+    div_time_avg_std = np.array([wt_mean, wt_std, ca_mean, ca_std])
+    
+    div_time_dist_WT = np.zeros((2, len(hist_WT)))
+    div_time_dist_CA = np.zeros((2, len(hist_CA)))
+    
+    div_time_dist_WT[0,:] = bins_WT[1:]-0.5*(bins_WT[1]-bins_WT[0])
+    div_time_dist_WT[1,:] = hist_WT
+    
+    div_time_dist_CA[0,:] = bins_CA[1:]-0.5*(bins_CA[1]-bins_CA[0])
+    div_time_dist_CA[1,:] = hist_CA
+    
+    np.savetxt("overal_pp"+"/"+"div_time_avg_std.txt", div_time_avg_std, fmt='%.4f', delimiter=',')
+    np.savetxt("overal_pp"+"/"+"div_time_dist_WT.txt", div_time_dist_WT, fmt='%.4f', delimiter=',')
+    np.savetxt("overal_pp"+"/"+"div_time_dist_C.txt", div_time_dist_CA, fmt='%.4f', delimiter=',')
+    
     # Find the maximum heights for both histograms
     max_CA = max(hist_CA)
     max_WT = max(hist_WT)
@@ -899,6 +914,7 @@ def mean_cycle_time_func_overal():
     if (not np.isnan(wt_mean)):
         plt.scatter(wt_mean, scatter_y_pos, color='purple', s=100, marker='o', label=f'WT Mean: {wt_mean:.2f}')
         plt.errorbar(wt_mean, scatter_y_pos, xerr=wt_std, fmt='o', color='purple', capsize=5, label=f'WT ±1 STD: {wt_std:.2f}')
+        
     if (not np.isnan(ca_mean)):
         plt.scatter(ca_mean, scatter_y_pos_c, color='green', s=100, marker='o', label=f'CA Mean: {ca_mean:.2f}')
         plt.errorbar(ca_mean, scatter_y_pos_c, xerr=ca_std, fmt='o', color='green', capsize=5, label=f'CA ±1 STD: {ca_std:.2f}')
