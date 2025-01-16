@@ -341,11 +341,20 @@ def mix_cost(cost, cost_weight):
     ## No div_timecost for mixed organoids
     ## division time
     
-    # init compos WT
-    # init compos WT
+    # init compos ( WT and C)
+    init_compos_fit_sim = np.loadtxt("overal_pp/init_compos_fit.txt", delimiter=',', dtype=float)
+    init_compos_fit_exp = np.loadtxt("exp_data/init_compos_fit_exp.txt", delimiter=',', dtype=float)
     
-    # init compos C
-    # init compos C
+    slope_WT_sim = init_compos_fit_sim[0,0]
+    slope_C_sim  = init_compos_fit_sim[1,0]
+    
+    slope_WT_exp = init_compos_fit_exp[0,0]
+    slope_C_exp  = init_compos_fit_exp[1,0]
+    
+    cost['init_compos_WT'] =  ( ( (slope_WT_sim - slope_WT_exp) / slope_WT_exp )**2 ) * cost_weight['init_compos_WT']
+    cost['init_compos_C']  =  ( ( (slope_C_sim  - slope_C_exp ) / slope_C_exp  )**2 ) * cost_weight['init_compos_C']
+    # init compos ( WT and C)
+    
     
     # stat change WT
     # stat change WT
@@ -397,7 +406,7 @@ if compos_key=='WT':
 elif compos_key=='C':
     cost = C_cost(cost, cost_weight)
 elif compos_key=='mix':
-    cost = mix_cost()
+    cost = mix_cost(cost, cost_weight)
     
 
 save_dict_to_file('cost_opt/cost_hist.txt', cost)
