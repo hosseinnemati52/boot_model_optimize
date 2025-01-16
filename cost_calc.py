@@ -357,6 +357,21 @@ def mix_cost(cost, cost_weight):
     
     
     # stat change WT
+    f_g0_pure = np.mean(np.loadtxt("../WT/overal_pp/WT_G0_fractions.txt", delimiter=','))
+    f_g1_pure = np.mean(np.loadtxt("../WT/overal_pp/WT_G1_fractions.txt", delimiter=','))
+    f_g2_pure = np.mean(np.loadtxt("../WT/overal_pp/WT_SG2M_fractions.txt", delimiter=','))
+    
+    f_g0_mix = np.mean(np.loadtxt("overal_pp/WT_G0_fractions.txt", delimiter=','))
+    f_g1_mix = np.mean(np.loadtxt("overal_pp/WT_G1_fractions.txt", delimiter=','))
+    f_g2_mix = np.mean(np.loadtxt("overal_pp/WT_SG2M_fractions.txt", delimiter=','))
+    
+    cost_g0 = np.exp( +( (f_g0_pure - f_g0_mix) / f_g0_pure ) * np.abs((f_g0_pure - f_g0_mix) / f_g0_pure) )
+    cost_g1 = ( (f_g1_pure - f_g1_mix) / f_g1_pure ) ** 2
+    cost_g2 = np.exp( -( (f_g2_pure - f_g2_mix) / f_g2_pure ) * np.abs((f_g2_pure - f_g2_mix) / f_g2_pure) )
+    
+    cost['stat_ch_WT_g0'] = cost_g0 * cost_weight['stat_ch_WT_g0']
+    cost['stat_ch_WT_g1'] = cost_g1 * cost_weight['stat_ch_WT_g1']
+    cost['stat_ch_WT_g2'] = cost_g2 * cost_weight['stat_ch_WT_g2']
     # stat change WT
     
     cost['tot'] = 0.0
