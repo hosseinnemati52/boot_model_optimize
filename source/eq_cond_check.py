@@ -16,10 +16,44 @@ import re
 import subprocess
 import os
 import sys
+from scipy.stats import ks_2samp
 
-def KS_test():
+CYCLING_STATE =   (1)
+G1_ARR_STATE =    (-1)
+G0_STATE =        (-2)
+DIFF_STATE =      (-3)
+APOP_STATE =      (-4)
+WIPED_STATE =     (-5)
+CA_CELL_TYPE =    (1)
+WT_CELL_TYPE =    (0)
+NULL_CELL_TYPE =  (-1)
+
+def KS_test(list_of_data, m_checking, p_val_thresh):
     
-    return 1
+    checking_list = list_of_data[-m_checking:]
+    
+    p_val_matrix = np.ones((m_checking, m_checking))
+    
+    for i in range(m_checking):
+        data_i = checking_list[i]
+        for j in range(i+1, m_checking):
+            data_j = checking_list[j]
+            
+            # plt.figure()
+            # plt.hist(data_i, bins=30, cumulative=True, alpha=0.5, color='blue', density=False)
+            # plt.hist(data_j, bins=30, cumulative=True, alpha=0.5, color='red', density=False)
+            # plt.show()
+            
+            
+            statistic, p_value = ks_2samp(data_i, data_j)
+            
+            p_val_matrix[i,j] = p_value
+            p_val_matrix[j,i] = p_value
+            
+    
+    result = int( (np.min(p_val_matrix) > p_val_thresh) )
+    
+    return result
 
 
 
@@ -49,10 +83,17 @@ with open("init_steps_data.txt", "r") as init_steps_data:
     
     
 
-TypeAllData = []
-StateAllData = []
-PhiAllData = []
-FitnessAllData = []
+# TypeAllData = []
+# StateAllData = []
+# PhiAllData = []
+# FitnessAllData = []
+
+WT_alive_phi_data_sequence = []
+WT_alive_fit_data_sequence = []
+C_alive_phi_data_sequence  = []
+C_alive_fit_data_sequence  = []
+
+
 
 stepIndex = -1
 while(1):
@@ -62,18 +103,60 @@ while(1):
         cellState = np.loadtxt(initStepsFolderName+'/State_'+str(stepIndex)+'.txt', delimiter=',', dtype=int)
         cellPhi   = np.loadtxt(initStepsFolderName+'/Phi_'+str(stepIndex)+'.txt', delimiter=',', dtype=float)
         cellFitness   = np.loadtxt(initStepsFolderName+'/Fit_'+str(stepIndex)+'.txt', delimiter=',', dtype=float)
+        
+        WT_alive_phi_data = []
+        WT_alive_fit_data = []
+        C_alive_phi_data = []
+        C_alive_fit_data = []
+        
+        WT_alive_phi_data.clear()
+        WT_alive_fit_data.clear()
+        C_alive_phi_data.clear()
+        C_alive_fit_data.clear()
+        
+        WT_alive_phi_data = []
+        WT_alive_fit_data = []
+        C_alive_phi_data = []
+        C_alive_fit_data = []
+        
+        for i in range(len(cellType)):
+            if (cellType[i]==WT_CELL_TYPE) and (cellState[i] > APOP_STATE):
+                WT_alive_phi_data.append(cellPhi[i])
+                WT_alive_fit_data.append(cellFitness[i,0])
+            elif (cellType[i]==CA_CELL_TYPE) and (cellState[i] > APOP_STATE):
+                C_alive_phi_data.append(cellPhi[i])
+                C_alive_fit_data.append(cellFitness[i,0])
+        
+        WT_alive_phi_data = np.array(WT_alive_phi_data)
+        WT_alive_fit_data = np.array(WT_alive_fit_data)
+        C_alive_phi_data =  np.array(C_alive_phi_data)
+        C_alive_fit_data =  np.array(C_alive_fit_data)
+        
+        WT_alive_phi_data_sequence.append(WT_alive_phi_data)
+        WT_alive_fit_data_sequence.append(WT_alive_fit_data)
+        C_alive_phi_data_sequence.append(C_alive_phi_data)
+        C_alive_fit_data_sequence.append(C_alive_fit_data)
+        
     except FileNotFoundError:
         break
-    
-    TypeAllData.append(cellType)
-    StateAllData.append(cellState)
-    PhiAllData.append(cellPhi)
-    FitnessAllData.append(cellFitness)
-    
-KS_cond = KS_test()
-number_cond = bool(stepIndex -1 >= n_sampling)
 
-eq_cond = (KS_cond) and (number_cond)
+    
+KS_cond = np.array([0,0,0,0], dtype=int)
+
+if (stepIndex +1 >= n_sampling):
+    
+    p_val_thresh = 0.05
+    
+    KS_cond[0] = KS_test(WT_alive_phi_data_sequence, m_checking, p_val_thresh)
+    KS_cond[1] = KS_test(WT_alive_fit_data_sequence, m_checking, p_val_thresh)
+    KS_cond[2] = KS_test(C_alive_phi_data_sequence, m_checking, p_val_thresh)
+    KS_cond[3] = KS_test(C_alive_fit_data_sequence, m_checking, p_val_thresh)
+
+
+number_cond = bool(stepIndex +1 >= n_sampling)
+
+eq_cond = (np.product(KS_cond)) and (number_cond)
+
 np.savetxt("eq_condition.txt", [int(eq_cond)], fmt="%d")
     
 

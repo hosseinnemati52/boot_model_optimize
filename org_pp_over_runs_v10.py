@@ -453,9 +453,9 @@ def overal_plotter(exp_data_load_switch, save_switch):
     plt.yscale("log")
     plt.legend(loc="upper left", bbox_to_anchor=(1, 1))
     plt.tight_layout()
-    
     if save_switch:
         plt.savefig('overal_stat_absolute.PNG', dpi=300)
+    plt.close()
     ### absolute number
     
     
@@ -493,6 +493,7 @@ def overal_plotter(exp_data_load_switch, save_switch):
         save_array[1,:] = y
         save_array[2,:] = y_err
         np.savetxt("overal_pp"+"/"+data_label+"_ov_pl"+".txt", save_array, fmt='%.4f', delimiter=',')
+        
     
     if exp_data_load_switch:
         #C_mix
@@ -537,6 +538,7 @@ def overal_plotter(exp_data_load_switch, save_switch):
     
     if save_switch:
         plt.savefig('overal_stat_norm.PNG', dpi=300)
+    plt.close()
     ### normalized
     
     
@@ -579,6 +581,7 @@ def overal_plotter(exp_data_load_switch, save_switch):
     
     if save_switch:
         plt.savefig('overal_stat_fracs.PNG', dpi=300)
+    plt.close()
     ### fractions
     
     
@@ -806,6 +809,7 @@ def growth_factor_plotter():
     plt.grid()
     plt.legend(fontsize=15)
     plt.savefig("growth_box.PNG", dpi=300)
+    plt.close()
     
     
     if WT_alive_stat[0]>0:
@@ -862,7 +866,7 @@ def growth_factor_plotter():
         # Save the figure
         plt.tight_layout()
         plt.savefig("growth_vs_perc_WT.PNG", dpi=300)
-        plt.show()
+        plt.close()
     
     
     
@@ -920,7 +924,7 @@ def growth_factor_plotter():
         # Save the figure
         plt.tight_layout()
         plt.savefig("growth_vs_perc_C.PNG", dpi=300)
-        plt.show()
+        plt.close()
     
     return
 

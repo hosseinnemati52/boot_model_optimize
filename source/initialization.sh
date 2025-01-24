@@ -10,9 +10,13 @@ python3 zero_step_init.py
 n=$(grep 'n_sampling:' init_steps_data.txt | awk '{print $2}')      # Extract the value of n_samp
 m=$(grep 'm_checking:' init_steps_data.txt | awk '{print $2}')  # Extract the value of m_checking
 
-# Loop from 1 to n
-for ((i=1; i<=n; i++))
+i=0
+
+while true
 do
+
+    ((i++))
+    
     # Step 1: Run "mechanically_relax.exe"
     #./mechanically_relax.exe
     # mechanically relax mode
@@ -33,7 +37,7 @@ do
         condition=$(cat eq_condition.txt)
         
         if [[ "$condition" -eq 1 ]]; then
-            echo "Equilibration condition met (condition=1 and i>$m)!";
+            #echo "Equilibration condition met (condition=1 and i>$m)!";
             
             # Run the script "make_phi_F.py"
             python3 make_phi_F.py;

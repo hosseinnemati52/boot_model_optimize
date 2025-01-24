@@ -1,4 +1,4 @@
-Dt_mr(h): 3.0
-Dt_eq(h): 4.0
+Dt_mr(h): 4.0
+Dt_eq(h): 11.0
 n_sampling: 10
 m_checking: 4

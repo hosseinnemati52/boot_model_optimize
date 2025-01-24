@@ -12,7 +12,7 @@ run_file_in_terminal() {
 
 N=$(<N_runs.csv)  # Total number of runs from the CSV file
 MAX_TERMINALS=20  # Number of terminals to open at a time
-THRESHOLD=5       # Minimum number of terminals to trigger new batch
+THRESHOLD=6       # Minimum number of terminals to trigger new batch
 INTERVAL=60       # Time interval to check in seconds
 started=0         # Counter for started scripts
 
