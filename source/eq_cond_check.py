@@ -82,7 +82,11 @@ with open("init_steps_data.txt", "r") as init_steps_data:
     init_steps_data.close()
     
     
+    
+    
 
+
+init_numbers = np.loadtxt("Init_numbers.csv", delimiter=',', dtype=int)
 # TypeAllData = []
 # StateAllData = []
 # PhiAllData = []
@@ -147,10 +151,19 @@ if (stepIndex +1 >= n_sampling):
     
     p_val_thresh = 0.05
     
-    KS_cond[0] = KS_test(WT_alive_phi_data_sequence, m_checking, p_val_thresh)
-    KS_cond[1] = KS_test(WT_alive_fit_data_sequence, m_checking, p_val_thresh)
-    KS_cond[2] = KS_test(C_alive_phi_data_sequence, m_checking, p_val_thresh)
-    KS_cond[3] = KS_test(C_alive_fit_data_sequence, m_checking, p_val_thresh)
+    if init_numbers[WT_CELL_TYPE] > 0:
+        KS_cond[0] = KS_test(WT_alive_phi_data_sequence, m_checking, p_val_thresh)
+        KS_cond[1] = KS_test(WT_alive_fit_data_sequence, m_checking, p_val_thresh)
+    else:
+        KS_cond[0] = 1
+        KS_cond[1] = 1
+        
+    if init_numbers[CA_CELL_TYPE] > 0:
+        KS_cond[2] = KS_test(C_alive_phi_data_sequence, m_checking, p_val_thresh)
+        KS_cond[3] = KS_test(C_alive_fit_data_sequence, m_checking, p_val_thresh)
+    else:
+        KS_cond[2] = 1
+        KS_cond[3] = 1
 
 
 number_cond = bool(stepIndex +1 >= n_sampling)
