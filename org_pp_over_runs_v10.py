@@ -978,8 +978,12 @@ def mean_cycle_time_func_overal():
     
         WT_dt_run = np.loadtxt("run_"+str(i+1)+"/pp_data/WT_div_dt.txt", delimiter=',')
         CA_dt_run = np.loadtxt("run_"+str(i+1)+"/pp_data/CA_div_dt.txt", delimiter=',')
-    
-    
+        
+        if np.shape(WT_dt_run) == (): # a single number
+            WT_dt_run = np.array([ float(WT_dt_run) ])
+        if np.shape(CA_dt_run) == (): # a single number
+            CA_dt_run = np.array([ float(CA_dt_run) ])
+        
         WT_dt = WT_dt.copy() + list(WT_dt_run).copy()
         CA_dt = CA_dt.copy() + list(CA_dt_run).copy()
     
