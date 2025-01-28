@@ -54,17 +54,20 @@ if compos_key != 'WT':
     
     while 1:
         try:
-            t_tilde_eval_file = np.loadtxt("../WT/t_tilde_eval.txt", delimiter=',')
+            tau_file = np.loadtxt("../WT/tau.txt", delimiter=',')
+            t_max_exp = np.loadtxt("../WT/t_max_exp.txt", delimiter=',')
+#            t_tilde_eval_file = np.loadtxt("../WT/t_tilde_eval.txt", delimiter=',')
         except FileNotFoundError:
             time.sleep(60)
             # print("ding")
             continue
         break
     
-    t_tilde_eval_avg = t_tilde_eval_file[0]
-    t_tilde_eval_err = t_tilde_eval_file[1]
+    tau_avg = tau_file[0]
+    tau_err = tau_file[1]
     
-    t_tilde_max = t_tilde_eval_avg - (t_tilde_eval_avg%2) + 2
+    t_tilde_max = t_max_exp/tau_avg
+    t_tilde_max = t_tilde_max - (t_tilde_max%2) + 2 + 0.0000001
     
     modif_task = dict()
     modif_task['nondim_quantity'] = 't_tilde_max'
