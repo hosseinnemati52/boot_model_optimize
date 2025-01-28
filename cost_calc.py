@@ -65,6 +65,8 @@ def weighted_LS_fitting(x_lin_fit, y_lin_fit, y_lin_ERR_fit):
 
 def interpolator_func(sim_data_total, exp_times):
     
+    equality_eps = 1e-6
+    
     sim_times = sim_data_total[0,:]
     
     interpolated_array = np.zeros((np.shape(sim_data_total)[0], len(exp_times)))
@@ -75,19 +77,52 @@ def interpolator_func(sim_data_total, exp_times):
     err_values_list = []
     
     for t_c in range(len(exp_times)):
+        
+        avg_values_list.clear()
+        err_values_list.clear()
+        
+        avg_values_list = []
+        err_values_list = []
+        
         exp_t = exp_times[t_c]
         t_err = (exp_t/tau_avg)*tau_err
         
         lower_t = exp_t - t_err
         upper_t = exp_t + t_err
         
+        nearest_left_idx = 0
+        nearest_right_idx = 0
+        
         for t_sim_c in range(len(sim_times)):
-            if sim_times[t_sim_c]>lower_t and sim_times[t_sim_c]<upper_t:
+            if sim_times[t_sim_c]>=lower_t and sim_times[t_sim_c]<=upper_t:
                 avg_values_list.append(sim_data_total[1,t_sim_c])
                 err_values_list.append(sim_data_total[2,t_sim_c])
+                
+            if sim_times[t_sim_c]<=exp_t:
+                nearest_left_idx = t_sim_c
+                nearest_right_idx = t_sim_c
+            if sim_times[nearest_right_idx]<exp_t:
+                nearest_right_idx += 1
         
-        interpolated_array[1,t_c] = np.mean(np.array(avg_values_list))
-        interpolated_array[2,t_c] = np.mean(np.array(err_values_list))
+        if len(avg_values_list)>0:
+            interpolated_array[1,t_c] = np.mean(np.array(avg_values_list))
+            interpolated_array[2,t_c] = np.mean(np.array(err_values_list))
+        
+        else: #len(avg_values_list) == 0
+            t_sim_left = sim_times[nearest_left_idx]
+            t_sim_right = sim_times[nearest_right_idx]
+            t_sim_difference = t_sim_right - t_sim_left
+            
+            weight_left = (exp_t-t_sim_left)/t_sim_difference
+            weight_right = (t_sim_right-exp_t)/t_sim_difference
+            
+            interpolated_array[1,t_c] = weight_left * sim_data_total[1,nearest_left_idx] \
+                                      + weight_right * sim_data_total[1,nearest_right_idx]
+            interpolated_array[2,t_c] = weight_left * sim_data_total[2,nearest_left_idx] \
+                                      + weight_right * sim_data_total[2,nearest_right_idx]
+        
+        
+        
         
         
     return interpolated_array
