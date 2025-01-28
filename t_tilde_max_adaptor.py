@@ -1,5 +1,6 @@
 
 import numpy as np
+import time
 
 def indices_finder(string, begin_char, end_char):
     
@@ -50,8 +51,16 @@ with open("compos.txt", "r") as compos:
     compos.close()
 
 if compos_key != 'WT':
-
-    t_tilde_eval_file = np.loadtxt("../WT/t_tilde_eval.txt", delimiter=',')
+    
+    while 1:
+        try:
+            t_tilde_eval_file = np.loadtxt("../WT/t_tilde_eval.txt", delimiter=',')
+        except FileNotFoundError:
+            time.sleep(60)
+            # print("ding")
+            continue
+        break
+    
     t_tilde_eval_avg = t_tilde_eval_file[0]
     t_tilde_eval_err = t_tilde_eval_file[1]
     
