@@ -22,6 +22,7 @@ import re
 import subprocess
 import os
 import seaborn as sns
+import time
 
 CYCLING_STATE =   (1)
 G1_ARR_STATE =    (-1)
@@ -1078,6 +1079,18 @@ except:
     pass
     
 N_runs = np.loadtxt('N_runs.csv', delimiter=',', dtype=int)
+
+##### waits until all runs are pp'ed
+switch_still_running = 1
+while switch_still_running: # THis makes sure that all runs are finished
+    time.sleep(60)
+    for run_c in range(N_runs):
+        if os.path.exists("run_"+str(run_c+1)+"/pp_data/time.txt"):
+            switch_still_running = 0
+        else:
+            switch_still_running = 1
+            break
+##### waits until all runs are pp'ed
 
 time = np.loadtxt("run_1/pp_data/time.txt", delimiter=',', dtype=float)
 N_samples = len(time)
