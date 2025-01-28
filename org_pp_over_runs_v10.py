@@ -1198,8 +1198,9 @@ for runC in range(N_runs):
 
 
 # For finding t_tilde for t=t_eval, and tau
-t_eval = 60 # the time at which we evaluate growth factors
-WT_growth_factor_at_t_eval = 5.62 # based on Saskias dataset (at t=60 h)
+t_eval_data = np.loadtxt("t_eval.csv", delimiter=',')
+t_eval = t_eval_data[0] # the time at which we evaluate growth factors
+WT_growth_factor_at_t_eval = t_eval_data[1] # based on Saskias dataset (at t=60 h)
 
 # t_eval = 20 # the time at which we evaluate growth factors
 # WT_growth_factor_at_t_eval = 1.69 # based on Saskias dataset (at t=60 h)
@@ -1208,6 +1209,10 @@ if compos_key != 'WT':
     tau_file = np.loadtxt("../WT/tau.txt", delimiter=',')
     tau_avg = tau_file[0]
     tau_err = tau_file[1]
+    
+    t_tilde_eval_file = np.loadtxt("../WT/t_tilde_eval.txt", delimiter=',')
+    t_tilde_eval_avg = t_tilde_eval_file[0]
+    t_tilde_eval_err = t_tilde_eval_file[1]
 
 elif compos_key == 'WT':
     
@@ -1238,12 +1243,14 @@ elif compos_key == 'WT':
     t_tilde_eval_avg = np.mean(t_tilde_eval_candidates)
     t_tilde_eval_err = np.std(t_tilde_eval_candidates)
     
+    np.savetxt("t_tilde_eval.txt", np.array([t_tilde_eval_avg, t_tilde_eval_err]), fmt='%.4f', delimiter=',')
+    
     tau_avg = t_eval / t_tilde_eval_avg
     tau_err = (t_eval/((t_tilde_eval_avg)**2))*t_tilde_eval_err
     
     np.savetxt("tau.txt", np.array([tau_avg, tau_err]), fmt='%.4f', delimiter=',')
 
-t_tilde_eval_avg = t_eval / tau_avg
+# t_tilde_eval_avg = t_eval / tau_avg
 
 # Now that t_tilde_eval_avg is found, and growth factors at t_tilde_eval_avg are evaluated
 t_tilde_eval_repres = 0
