@@ -2,6 +2,10 @@
 
 python3 t_tilde_max_adaptor.py
 
+mkdir overal_pp
+
+rm -rf "overal_pp"/*
+
 # Read the value of N from the N_runs.csv file
 N=$(<N_runs.csv)
 
