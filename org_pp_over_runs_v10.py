@@ -1319,7 +1319,6 @@ if WT_alive_stat[0]>0:
 
 mean_cycle_time_func_overal()
 
-np.savetxt("overal_pp"+"/"+"pp_done.txt", [1], fmt='%d', delimiter=',')
 
 # ## overal save
 # overal_saver()

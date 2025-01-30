@@ -457,7 +457,9 @@ elif compos_key=='C':
     cost = C_cost(cost, cost_weight)
 elif compos_key=='mix':
     cost = mix_cost(cost, cost_weight)
-    
+   
+np.savetxt("overal_pp"+"/"+"pp_done.txt", [1], fmt='%d', delimiter=',')
+
 
 save_dict_to_file('cost_opt/cost_hist.txt', cost)
     
