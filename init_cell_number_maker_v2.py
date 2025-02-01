@@ -48,7 +48,9 @@ WT_init_frac_interval = np.array([a, b])
 
 eps = 0.0001
 
-Init_numbers_array = np.zeros((2, N_runs), dtype=int)
+max_number= 150
+
+
 
 if np.mean(WT_init_frac_interval) > (1.0 - eps):
     # pure WT
@@ -57,12 +59,21 @@ if np.mean(WT_init_frac_interval) > (1.0 - eps):
     sample_bank_length = len(sample_bank)
     
     all_indices = np.arange(sample_bank_length)
-    chosen_indices = np.random.choice(all_indices, N_runs, replace=False)
-    chosen_elements = np.array([sample_bank[i] for i in chosen_indices])
-    #init_num_cells = 20*np.ones(N_runs)
     
-    Init_numbers_array[0,:] = chosen_elements.copy()
-    Init_numbers_array[1,:] = 0 * chosen_elements.copy()
+    while 1:
+        
+        Init_numbers_array = np.zeros((2, N_runs), dtype=int)
+        
+        chosen_indices = np.random.choice(all_indices, N_runs, replace=False)
+        chosen_elements = np.array([sample_bank[i] for i in chosen_indices])
+        #init_num_cells = 20*np.ones(N_runs)
+        
+        Init_numbers_array[0,:] = chosen_elements.copy()
+        Init_numbers_array[1,:] = 0 * chosen_elements.copy()
+        
+        if np.max(Init_numbers_array) <= max_number:
+            break
+        
     
 elif np.mean(WT_init_frac_interval) < eps:
     # pure Cancer
@@ -71,12 +82,20 @@ elif np.mean(WT_init_frac_interval) < eps:
     sample_bank_length = len(sample_bank)
     
     all_indices = np.arange(sample_bank_length)
-    chosen_indices = np.random.choice(all_indices, N_runs, replace=False)
-    chosen_elements = np.array([sample_bank[i] for i in chosen_indices])
-    #init_num_cells = 20*np.ones(N_runs)
     
-    Init_numbers_array[0,:] = 0 * chosen_elements.copy()
-    Init_numbers_array[1,:] = chosen_elements.copy()
+    while 1:
+        
+        Init_numbers_array = np.zeros((2, N_runs), dtype=int)
+        
+        chosen_indices = np.random.choice(all_indices, N_runs, replace=False)
+        chosen_elements = np.array([sample_bank[i] for i in chosen_indices])
+        #init_num_cells = 20*np.ones(N_runs)
+        
+        Init_numbers_array[0,:] = 0 * chosen_elements.copy()
+        Init_numbers_array[1,:] = chosen_elements.copy()
+        
+        if np.max(Init_numbers_array) <= max_number:
+            break
     
     
 else:
@@ -86,21 +105,34 @@ else:
     sample_bank_length = np.shape(sample_bank)[0]
     
     all_indices = np.arange(sample_bank_length)
-    chosen_indices = np.random.choice(all_indices, N_runs, replace=False)
     
-    
-    init_num_cells_WT = []
-    init_num_cells_C  = []
-    for i in chosen_indices:
-        init_num_cells_WT.append(sample_bank[i,0])
-        init_num_cells_C.append(sample_bank[i,1])
-    
-    init_num_cells_WT=np.array(init_num_cells_WT)
-    init_num_cells_C=np.array(init_num_cells_C)
-    
-    Init_numbers_array[0, :] = init_num_cells_WT
-    Init_numbers_array[1, :] = init_num_cells_C
-    
+    while 1:
+        
+        Init_numbers_array = np.zeros((2, N_runs), dtype=int)
+        
+        chosen_indices = np.random.choice(all_indices, N_runs, replace=False)
+        
+        init_num_cells_WT = []
+        init_num_cells_C  = []
+        
+        init_num_cells_WT.clear()
+        init_num_cells_C.clear()
+        
+        init_num_cells_WT = []
+        init_num_cells_C  = []
+        
+        for i in chosen_indices:
+            init_num_cells_WT.append(sample_bank[i,0])
+            init_num_cells_C.append(sample_bank[i,1])
+        
+        init_num_cells_WT=np.array(init_num_cells_WT)
+        init_num_cells_C=np.array(init_num_cells_C)
+        
+        Init_numbers_array[0, :] = init_num_cells_WT
+        Init_numbers_array[1, :] = init_num_cells_C
+        
+        if np.max(Init_numbers_array) <= max_number:
+            break
 
 np.savetxt("Init_numbers_array.csv", Init_numbers_array, delimiter=',', fmt='%d')
 
