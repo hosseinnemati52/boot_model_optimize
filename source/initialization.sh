@@ -4,7 +4,8 @@
 ./clear_folders_and_zips.sh
 
 # zero step initialization
-python3 zero_step_init.py
+#python3 zero_step_init.py
+python3 zero_step_init_circular.py
 
 # Read values from init_steps_data.txt
 n=$(grep 'n_sampling:' init_steps_data.txt | awk '{print $2}')      # Extract the value of n_samp

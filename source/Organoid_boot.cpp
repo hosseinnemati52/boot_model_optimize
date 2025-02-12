@@ -466,11 +466,16 @@ int main(int argc, char* argv[])
 
     ///////////////////////////////// VARIABLES CHANGES BASED ON THE MODE (ARGUMENT) /////////////////////
     double sim_time;
+    double diff_factor=0.0;
+    double flux_factor=0.0;
     if (argument == "mr")
     {
         sim_time = mr_sim_time;
         R_cut_coef_game = R_eps;
-
+        
+        diff_factor = 0.0;
+	flux_factor = 0.0;
+	
         for (int typeC = 0; typeC < NTypes; typeC++)
         {
             typeOmega[typeC] = 0.0;
@@ -491,10 +496,14 @@ int main(int argc, char* argv[])
     else if (argument == "eq")
     {
         sim_time = eq_sim_time;
+        diff_factor = 1.0;
+        flux_factor = 0.0;
     }
     else if (argument == "norm")
     {
         sim_time = maxTime;
+        diff_factor = 1.0;
+        flux_factor = 1.0;
     }
     else
     {
@@ -842,13 +851,13 @@ int main(int argc, char* argv[])
                         // Kuramoto
 
                         // fitness flux
-                        J_input_real_1     = typeTypePayOff_mat_real_C[cellType_1][cellType_2] + \
-                                            typeTypePayOff_mat_real_F1[cellType_1][cellType_2] * cellFitness[cellC_1][0] + \
-                                            typeTypePayOff_mat_real_F2[cellType_1][cellType_2] * cellFitness[cellC_2][0]; // This flux goes INTO cellC_1
+                        J_input_real_1     = typeTypePayOff_mat_real_C[cellType_1][cellType_2] * flux_factor + \
+                                            typeTypePayOff_mat_real_F1[cellType_1][cellType_2] * cellFitness[cellC_1][0] * diff_factor + \
+                                            typeTypePayOff_mat_real_F2[cellType_1][cellType_2] * cellFitness[cellC_2][0] * diff_factor ; // This flux goes INTO cellC_1
 
-                        J_input_real_2     = typeTypePayOff_mat_real_C[cellType_2][cellType_1] + \
-                                            typeTypePayOff_mat_real_F1[cellType_2][cellType_1] * cellFitness[cellC_2][0] + \
-                                            typeTypePayOff_mat_real_F2[cellType_2][cellType_1] * cellFitness[cellC_1][0]; // This flux goes INTO cellC_2
+                        J_input_real_2     = typeTypePayOff_mat_real_C[cellType_2][cellType_1] * flux_factor + \
+                                            typeTypePayOff_mat_real_F1[cellType_2][cellType_1] * cellFitness[cellC_2][0] * diff_factor  + \
+                                            typeTypePayOff_mat_real_F2[cellType_2][cellType_1] * cellFitness[cellC_1][0] * diff_factor ; // This flux goes INTO cellC_2
                         
                         cellJ[cellC_1] += J_input_real_1; // This flux goes INTO cellC_1
                         cellJ[cellC_2] += J_input_real_2; // This flux goes INTO cellC_2 
@@ -952,15 +961,18 @@ int main(int argc, char* argv[])
                 }
                 // fitness update
                 // cellFitnessUpdated[cellC_1][0] = cellFitness[cellC_1][0] + \
-                //                                 fitNoise + \
-                //                                 dt * ( \
-                //                                             cellJ[cellC_1] + \
-                //                                             (-1.0 / tau) * (cellFitness[cellC_1][0] - typeFit0[cellType_1]) 
-                //                                         );
+                                                 fitNoise + \
+                                                 dt * ( \
+                                                             cellJ[cellC_1] + \
+                                                             (-1.0 / tau) * (cellFitness[cellC_1][0] - typeFit0[cellType_1]) );
                 
                 cellFitnessUpdated[cellC_1][0] = cellFitness[cellC_1][0] + \
                                                 fitNoise + \
                                                 dt * cellJ[cellC_1];
+                if (cellState[cellC_1] > G0_STATE)
+                {
+                	cellFitnessUpdated[cellC_1][0] += dt * (-1.0 / tau) * (cellFitness[cellC_1][0] - typeFit0[cellType_1]) ;
+                }
                 
                 // if (   (abs(cellPhiUpdated[cellC_1] - G1Border*2*PI) < barrierD ) \
                 //     && (cellFitnessUpdated[cellC_1][0] < Fit_Th_Wall + deltaFit_computational_cut ) )
@@ -1186,10 +1198,18 @@ int main(int argc, char* argv[])
                         {
                             cellState[cellC_1] = CYCLING_STATE;
                         }
-                        else // goes to G0
+                        else // goes to G0 with and Arrhenius rate
                         {
-                            cellFitness[cellC_1][0] = cellFitnessUpdated[cellC_1][0];
-                            cellState[cellC_1] = G0_STATE;
+                            uniform_rand_1 = ((long double)(int_rand_1)-MT_MIN)/((long double)MT_MAX-MT_MIN);
+                            double Ed_to_kT_Fit = 5.0;
+                            double g0_rate = exp(-Ed_to_kT_Fit);
+                            if (uniform_rand_1 < g0_rate)
+                            {
+		                    cellFitness[cellC_1][0] = cellFitnessUpdated[cellC_1][0];
+		                    cellState[cellC_1] = G0_STATE;
+                            } else {
+                            	; // It does nothing
+                            }
                         }
                     }// the end of "if (cellFitnessUpdated[cellC_1][0] > Fit_Th_G1_arr){}"
                     continue;
@@ -1279,7 +1299,7 @@ int main(int argc, char* argv[])
                     }
                     
 
-                    // cout<<"t = "<<t<<endl;
+                    cout<<"t = "<<t<<endl;
 
                     saved_bunch_index++;
 
