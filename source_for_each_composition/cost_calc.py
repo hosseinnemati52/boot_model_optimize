@@ -276,7 +276,8 @@ def WT_cost(cost, cost_weight):
     weights_sum = np.sum(weights)
     weights = weights / weights_sum
     
-    cost['pop_WT_pure'] = np.sum( weights * ( (np.log(exp_data[1,1:])-np.log(sim_data[1,1:]))/np.log(exp_data[1,1:]) )**2 ) * cost_weight['pop_WT_pure']
+    #cost['pop_WT_pure'] = np.sum( weights * ( (np.log(exp_data[1,1:])-np.log(sim_data[1,1:]))/np.log(exp_data[1,1:]) )**2 ) * cost_weight['pop_WT_pure']
+    cost['pop_WT_pure'] = np.sum( weights * ( (np.log(exp_data[1,1:])-np.log(sim_data[1,1:])) )**2 ) * cost_weight['pop_WT_pure']
     ## population
     
     ## division time
@@ -311,7 +312,8 @@ def C_cost(cost, cost_weight):
     weights_sum = np.sum(weights)
     weights = weights / weights_sum
     
-    cost['pop_C_pure'] = np.sum( weights * ( (np.log(exp_data[1,1:])-np.log(sim_data[1,1:]))/np.log(exp_data[1,1:]) )**2 ) * cost_weight['pop_C_pure']
+    #cost['pop_C_pure'] = np.sum( weights * ( (np.log(exp_data[1,1:])-np.log(sim_data[1,1:]))/np.log(exp_data[1,1:]) )**2 ) * cost_weight['pop_C_pure']
+    cost['pop_C_pure'] = np.sum( weights * ( (np.log(exp_data[1,1:])-np.log(sim_data[1,1:])) )**2 ) * cost_weight['pop_C_pure']
     ## population
     
     ## division time
@@ -346,7 +348,8 @@ def mix_cost(cost, cost_weight):
     weights_sum = np.sum(weights)
     weights = weights / weights_sum
     
-    cost['pop_WT_mix'] = np.sum( weights * ( (np.log(exp_data[1,1:])-np.log(sim_data[1,1:]))/np.log(exp_data[1,1:]) )**2 ) * cost_weight['pop_WT_mix']
+    #cost['pop_WT_mix'] = np.sum( weights * ( (np.log(exp_data[1,1:])-np.log(sim_data[1,1:]))/np.log(exp_data[1,1:]) )**2 ) * cost_weight['pop_WT_mix']
+    cost['pop_WT_mix'] = np.sum( weights * ( (np.log(exp_data[1,1:])-np.log(sim_data[1,1:])) )**2 ) * cost_weight['pop_WT_mix']
     ## population WT
     
     ## population C
@@ -368,7 +371,8 @@ def mix_cost(cost, cost_weight):
     weights_sum = np.sum(weights)
     weights = weights / weights_sum
     
-    cost['pop_C_mix'] = np.sum( weights * ( (np.log(exp_data[1,1:])-np.log(sim_data[1,1:]))/np.log(exp_data[1,1:]) )**2 ) * cost_weight['pop_C_mix']
+    #cost['pop_C_mix'] = np.sum( weights * ( (np.log(exp_data[1,1:])-np.log(sim_data[1,1:]))/np.log(exp_data[1,1:]) )**2 ) * cost_weight['pop_C_mix']
+    cost['pop_C_mix'] = np.sum( weights * ( (np.log(exp_data[1,1:])-np.log(sim_data[1,1:])) )**2 ) * cost_weight['pop_C_mix']
     ## population C
     
     

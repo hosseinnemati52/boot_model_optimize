@@ -1,0 +1,4 @@
+Dt_mr(h): 10.0
+Dt_eq(h): 30.0
+n_sampling: 5
+m_checking: 2

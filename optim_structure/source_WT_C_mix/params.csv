@@ -21,45 +21,45 @@ typeDr = [1.0, 1.0]
 ############### SELF-PROPULSION ##############
 
 ############### G1 phase border / (2*PI) ##############
-G1Border = 0.40
+G1Border = 0.30
 ############### G1 phase border / (2*PI) ##############
 
 ############### POTENTIAL LANDSCAPE ##############
-typeOmega = [1.0,1.2020631882847055]
+typeOmega = [1.0, 1.00]
 typeBarrierW = [0.1, 0.1]
-typeSigmaPhi = [0.20247660766955522,0.20247660766955522]
-typeSigmaFit = [0.08346589396576755,0.08346589396576755]
-barrierPeakCoef =0.07951185294850005
+typeSigmaPhi = [0.2, 0.2]
+typeSigmaFit = [0.2, 0.2]
+barrierPeakCoef = 0.055
 
-typeFit0 = [1.0, 1.0]
-Fit_Th_Wall =0.483657104068119
-Fit_Th_G0 =0.437090879323303
+typeFit0 = [1.0, 1.04]
+Fit_Th_Wall = 0.73
+Fit_Th_G0 = 0.729
 Fit_Th_Diff = 0.0000001
 Fit_Th_Apop = 0.0
 ############### POTENTIAL LANDSCAPE ##############
 
 ############### TIMING & SAMPLING ##############
-maxTime = 50
+maxTime =70
 dt = 0.001
 dt_sample = 0.05
-samplesPerWrite = 40
-writePerZip = 5
-printingTimeInterval = 100.0
+samplesPerWrite = 20
+writePerZip = 10
+printingTimeInterval = 1.0
 ############### TIMING & SAMPLING ##############
 
 ############### GAME ##############
 R_cut_coef_game = 1.1
-tau = 999999
-typeTypePayOff_mat_real_C = [[0.000,-0.015417850402553014];[0.02281438467747339, 0.00]]
-typeTypePayOff_mat_real_F1 = [[-0.00, 0];[0, -0.00]]
-typeTypePayOff_mat_real_F2 = [[0.00, 0];[0, 0.00]]
+tau = 4
+typeTypePayOff_mat_real_C = [[0.000, -0.06];[0.05, 0.00]]
+typeTypePayOff_mat_real_F1 = [[-0.08, 0];[0, -0.05]]
+typeTypePayOff_mat_real_F2 = [[0.08, 0];[0, 0.05]]
 typeTypePayOff_mat_imag_C = [[0.000, 0.0];[0.0, 0.00]]
 typeTypePayOff_mat_imag_F1 = [[0.000, 0.0];[0.0, 0.00]]
 typeTypePayOff_mat_imag_F2 = [[0.000, 0.0];[0.0, 0.00]]
 ############### GAME ##############
 
 ############### NEWBORN FITNESS ##############
-newBornFitKey = ec
+newBornFitKey = FI
 ############### NEWBORN FITNESS ##############
 
 ############### APOPTOSIS ##############

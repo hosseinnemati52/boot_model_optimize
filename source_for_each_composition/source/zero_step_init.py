@@ -271,7 +271,7 @@ def XYVxVy_init():
     
     while(1):
         A_total_extra *= (1+plus_factor)
-        #print(A_total_extra)
+        print(A_total_extra)
         R_total_extra = (A_total_extra/np.pi)**0.5
         
         if Init_numbers[0] == 0:
@@ -444,4 +444,4 @@ for i in range(1):
     
     np.savetxt("init"+"/"+"Theta_init.txt", 0.0*cellX, fmt='%.6f', delimiter=',')
     
-    #print("i = "+str(i)+" : done!")
+    print("i = "+str(i)+" : done!")

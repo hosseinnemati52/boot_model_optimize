@@ -48,7 +48,7 @@ WT_init_frac_interval = np.array([a, b])
 
 eps = 0.0001
 
-max_number= 150
+max_number= 100
 
 
 
