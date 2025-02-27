@@ -1,4 +1,4 @@
 max_iter		50
-l_rate			0.005
+l_rate			0.002
 stop_thresh		0.00000001
-dh			0.015
+dh			0.01

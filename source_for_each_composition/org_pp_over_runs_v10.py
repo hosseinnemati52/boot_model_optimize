@@ -23,6 +23,7 @@ import subprocess
 import os
 import seaborn as sns
 import time
+import sys
 
 CYCLING_STATE =   (1)
 G1_ARR_STATE =    (-1)
@@ -1235,6 +1236,20 @@ elif compos_key == 'WT':
         WT_alive_stat_norm[runC,:] = WT_alive_stat_overal[runC,:]/WT_alive_stat_overal[runC,0]
     avg_WT_alive_stat_norm = np.mean(WT_alive_stat_norm, axis=0)
     err_WT_alive_stat_norm = np.std(WT_alive_stat_norm, axis=0)/np.sqrt(N_runs-1)
+    
+    [t_max_exp, WT_norm_t_max_exp] = np.loadtxt("t_max_exp.txt", delimiter=',', dtype=float)
+    
+    if avg_WT_alive_stat_norm[-1]-err_WT_alive_stat_norm[-1] >= WT_norm_t_max_exp:
+        
+        with open("t_sufficiency.txt", "w") as t_sufficiency:
+            t_sufficiency.write("success")
+        t_sufficiency.close()
+    else:
+        with open("t_sufficiency.txt", "w") as t_sufficiency:
+            t_sufficiency.write("fail")
+        t_sufficiency.close()
+        sys.exit(1)
+        
     
     avg_WT_ln = np.log(avg_WT_alive_stat_norm)
     err_WT_ln = err_WT_alive_stat_norm/avg_WT_alive_stat_norm

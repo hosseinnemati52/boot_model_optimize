@@ -18,6 +18,7 @@ import re
 import subprocess
 import os
 import seaborn as sns
+import sys
 
 CYCLING_STATE =   (1)
 G1_ARR_STATE =    (-1)
@@ -225,9 +226,14 @@ def cost_initialization():
     cost['init_compos_WT'] = 0.0
     cost['init_compos_C'] = 0.0
     
-    cost['stat_ch_WT_g0'] = 0.0
-    cost['stat_ch_WT_g1'] = 0.0
-    cost['stat_ch_WT_g2'] = 0.0
+    # cost['stat_ch_WT_g0'] = 0.0
+    # cost['stat_ch_WT_g1'] = 0.0
+    # cost['stat_ch_WT_g2'] = 0.0
+    
+    cost['stat_WT_g0_pure'] = 0.0
+    cost['stat_WT_g2_pure'] = 0.0
+    cost['stat_WT_g0_mix'] = 0.0
+    cost['stat_WT_g2_mix'] = 0.0
     
     cost['tot'] = 0.0
     # cost val
@@ -248,9 +254,15 @@ def cost_initialization():
     cost_weight['init_compos_WT'] = init_compos_weight / 2
     cost_weight['init_compos_C'] = init_compos_weight / 2
     
-    cost_weight['stat_ch_WT_g0'] = stat_weight / 3
-    cost_weight['stat_ch_WT_g1'] = stat_weight / 3
-    cost_weight['stat_ch_WT_g2'] = stat_weight / 3
+    # cost_weight['stat_ch_WT_g0'] = stat_weight / 3
+    # cost_weight['stat_ch_WT_g1'] = stat_weight / 3
+    # cost_weight['stat_ch_WT_g2'] = stat_weight / 3
+    
+    cost_weight['stat_WT_g0_pure'] = stat_weight / 4
+    cost_weight['stat_WT_g2_pure'] = stat_weight / 4
+    cost_weight['stat_WT_g0_mix'] =  stat_weight / 4
+    cost_weight['stat_WT_g2_mix'] =  stat_weight / 4
+    
     # cost weights
     
     return cost, cost_weight
@@ -284,7 +296,21 @@ def WT_cost(cost, cost_weight):
     err_div_time = ( (div_time_avg_WT - div_time_pref_WT)/div_time_pref_WT) ** 2
     cost['div_t_WT_pure'] = err_div_time * cost_weight['div_t_WT_pure']
     ## division time
-
+    
+    # state WT
+    f_g0_pure = np.mean(np.loadtxt("overal_pp/WT_G0_fractions.txt", delimiter=','))
+    f_g2_pure = np.mean(np.loadtxt("overal_pp/WT_SG2M_fractions.txt", delimiter=','))
+    
+    f_g0_pure_exp = 0.2
+    f_g2_pure_exp = 0.2
+    
+    cost_g0_pure = (f_g0_pure - f_g0_pure_exp)**2
+    cost_g2_pure = (f_g2_pure - f_g2_pure_exp)**2
+    
+    cost['stat_WT_g0_pure'] = cost_g0_pure * cost_weight['stat_WT_g0_pure']
+    cost['stat_WT_g2_pure'] = cost_g2_pure * cost_weight['stat_WT_g2_pure']
+    # state WT
+    
     
     cost['tot'] = 0.0
     cost['tot'] = sum(cost.values())
@@ -390,28 +416,42 @@ def mix_cost(cost, cost_weight):
     slope_WT_exp = init_compos_fit_exp[0,0]
     slope_C_exp  = init_compos_fit_exp[1,0]
     
-    cost['init_compos_WT'] =  ( ( (slope_WT_sim - slope_WT_exp) / slope_WT_exp )**2 ) * cost_weight['init_compos_WT']
-    cost['init_compos_C']  =  ( ( (slope_C_sim  - slope_C_exp ) / slope_C_exp  )**2 ) * cost_weight['init_compos_C']
+    cost['init_compos_WT'] =  0.01 * ( ( (slope_WT_sim - slope_WT_exp) / slope_WT_exp )**2 ) * cost_weight['init_compos_WT']
+    cost['init_compos_C']  =  0.01 * ( ( (slope_C_sim  - slope_C_exp ) / slope_C_exp  )**2 ) * cost_weight['init_compos_C']
     # init compos ( WT and C)
     
     
-    # stat change WT
-    f_g0_pure = np.mean(np.loadtxt("../WT/overal_pp/WT_G0_fractions.txt", delimiter=','))
-    f_g1_pure = np.mean(np.loadtxt("../WT/overal_pp/WT_G1_fractions.txt", delimiter=','))
-    f_g2_pure = np.mean(np.loadtxt("../WT/overal_pp/WT_SG2M_fractions.txt", delimiter=','))
+    # # stat change WT
+    # f_g0_pure = np.mean(np.loadtxt("../WT/overal_pp/WT_G0_fractions.txt", delimiter=','))
+    # f_g1_pure = np.mean(np.loadtxt("../WT/overal_pp/WT_G1_fractions.txt", delimiter=','))
+    # f_g2_pure = np.mean(np.loadtxt("../WT/overal_pp/WT_SG2M_fractions.txt", delimiter=','))
     
+    # f_g0_mix = np.mean(np.loadtxt("overal_pp/WT_G0_fractions.txt", delimiter=','))
+    # f_g1_mix = np.mean(np.loadtxt("overal_pp/WT_G1_fractions.txt", delimiter=','))
+    # f_g2_mix = np.mean(np.loadtxt("overal_pp/WT_SG2M_fractions.txt", delimiter=','))
+    
+    # cost_g0 = np.exp( +( (f_g0_pure - f_g0_mix) / f_g0_pure ) * np.abs((f_g0_pure - f_g0_mix) / f_g0_pure) )
+    # cost_g1 = ( (f_g1_pure - f_g1_mix) / f_g1_pure ) ** 2
+    # cost_g2 = np.exp( -( (f_g2_pure - f_g2_mix) / f_g2_pure ) * np.abs((f_g2_pure - f_g2_mix) / f_g2_pure) )
+    
+    # cost['stat_ch_WT_g0'] = cost_g0 * cost_weight['stat_ch_WT_g0']
+    # cost['stat_ch_WT_g1'] = cost_g1 * cost_weight['stat_ch_WT_g1']
+    # cost['stat_ch_WT_g2'] = cost_g2 * cost_weight['stat_ch_WT_g2']
+    # # stat change WT
+    
+    # state WT
     f_g0_mix = np.mean(np.loadtxt("overal_pp/WT_G0_fractions.txt", delimiter=','))
-    f_g1_mix = np.mean(np.loadtxt("overal_pp/WT_G1_fractions.txt", delimiter=','))
     f_g2_mix = np.mean(np.loadtxt("overal_pp/WT_SG2M_fractions.txt", delimiter=','))
     
-    cost_g0 = np.exp( +( (f_g0_pure - f_g0_mix) / f_g0_pure ) * np.abs((f_g0_pure - f_g0_mix) / f_g0_pure) )
-    cost_g1 = ( (f_g1_pure - f_g1_mix) / f_g1_pure ) ** 2
-    cost_g2 = np.exp( -( (f_g2_pure - f_g2_mix) / f_g2_pure ) * np.abs((f_g2_pure - f_g2_mix) / f_g2_pure) )
+    f_g0_mix_exp = 0.3
+    f_g2_mix_exp = 0.1
     
-    cost['stat_ch_WT_g0'] = cost_g0 * cost_weight['stat_ch_WT_g0']
-    cost['stat_ch_WT_g1'] = cost_g1 * cost_weight['stat_ch_WT_g1']
-    cost['stat_ch_WT_g2'] = cost_g2 * cost_weight['stat_ch_WT_g2']
-    # stat change WT
+    cost_g0_mix = (f_g0_mix - f_g0_mix_exp)**2
+    cost_g2_mix = (f_g2_mix - f_g2_mix_exp)**2
+    
+    cost['stat_WT_g0_mix'] = cost_g0_mix * cost_weight['stat_WT_g0_mix']
+    cost['stat_WT_g2_mix'] = cost_g2_mix * cost_weight['stat_WT_g2_mix']
+    # state WT
     
     cost['tot'] = 0.0
     cost['tot'] = sum(cost.values())
@@ -456,7 +496,16 @@ except:
 cost, cost_weight = cost_initialization()
 
 if compos_key=='WT':
-    cost = WT_cost(cost, cost_weight)
+    
+    with open("t_sufficiency.txt", "r") as t_sufficiency:
+        string = t_sufficiency.readline()
+    t_sufficiency.close()
+    
+    if string[0:len("success")] == "success":
+        cost = WT_cost(cost, cost_weight)
+    else:
+        print("t_sufficiency error!")
+        sys.exit()
 elif compos_key=='C':
     cost = C_cost(cost, cost_weight)
 elif compos_key=='mix':
